@@ -21,6 +21,10 @@ public class SkyWars extends JavaPlugin {
     public void onEnable() {
         super.onEnable();
         instance = this;
+
+        // Загружает данные с конфиг файла
+        Config.load();
+
         gameManager = new GameManager();
     }
 
