@@ -1,0 +1,6 @@
+main: net.abdymazhit.skywars.SkyWars
+name: SkyWars
+version: 1.0.0
+description: Мини-игра SkyWars
+author: Abdymazhit
+prefix: SkyWars

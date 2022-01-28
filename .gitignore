@@ -1,0 +1,8 @@
+# Intellij
+.idea
+/target/
+/out/
+*.iml
+
+# Maven
+dependency-reduced-pom.xml
