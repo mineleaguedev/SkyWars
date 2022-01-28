@@ -67,6 +67,30 @@ public class Kit {
         player.getInventory().addItem(kit.items);
     }
 
+    /**
+     * Получает материал
+     * @return Материал
+     */
+    public Material getMaterial() {
+        return material;
+    }
+
+    /**
+     * Получает название
+     * @return Название
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Получает описание
+     * @return Описание
+     */
+    public List<String> getDescription() {
+        return description;
+    }
+
     static {
         idToKit = new HashMap<>();
         kitToId = new HashMap<>();
