@@ -107,6 +107,12 @@ public class Config {
         if(islands.size() > deathmatchSpawns.size()) {
             throw new IllegalArgumentException("Недостаточно местоположений точек детматча! Текущее количество: " + deathmatchSpawns.size() + ". Необходимо: " + islands.size());
         }
+
+        if(mode.equals(Mode.RANKED)) {
+            if(islands.size() != 8) {
+                throw new IllegalArgumentException("Неверное количество команд! Для запуска рейтинговой игры количество команд должно 8!");
+            }
+        }
     }
 
     /**

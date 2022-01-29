@@ -1,4 +1,4 @@
-package net.abdymazhit.skywars.menu;
+package net.abdymazhit.skywars.items.menu;
 
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;

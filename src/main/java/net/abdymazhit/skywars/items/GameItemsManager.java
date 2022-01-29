@@ -2,8 +2,7 @@ package net.abdymazhit.skywars.items;
 
 import net.abdymazhit.skywars.Config;
 import net.abdymazhit.skywars.SkyWars;
-import net.abdymazhit.skywars.chests.ItemUsage;
-import net.abdymazhit.skywars.menu.*;
+import net.abdymazhit.skywars.items.menu.*;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;

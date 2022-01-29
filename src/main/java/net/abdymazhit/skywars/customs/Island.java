@@ -3,7 +3,7 @@ package net.abdymazhit.skywars.customs;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,7 +24,7 @@ public class Island {
     private final List<Location> chests;
 
     /** Список игроков острова */
-    private final LinkedHashSet<Player> players;
+    private final List<Player> players;
 
     /**
      * Создает новый остров
@@ -37,7 +37,7 @@ public class Island {
         this.tag = tag;
         this.spawn = spawn;
         this.chests = chests;
-        this.players = new LinkedHashSet<>();
+        this.players = new ArrayList<>();
     }
 
     /**
@@ -92,7 +92,7 @@ public class Island {
      * Получает список игроков острова
      * @return Список игроков острова
      */
-    public LinkedHashSet<Player> getPlayers() {
+    public List<Player> getPlayers() {
         return players;
     }
 }

@@ -1,4 +1,4 @@
-package net.abdymazhit.skywars.menu;
+package net.abdymazhit.skywars.items.menu;
 
 import net.abdymazhit.skywars.Config;
 import net.abdymazhit.skywars.SkyWars;

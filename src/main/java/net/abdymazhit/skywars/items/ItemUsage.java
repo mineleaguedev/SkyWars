@@ -1,4 +1,4 @@
-package net.abdymazhit.skywars.chests;
+package net.abdymazhit.skywars.items;
 
 import org.bukkit.entity.Player;
 

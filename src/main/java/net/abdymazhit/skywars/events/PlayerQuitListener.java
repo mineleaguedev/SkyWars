@@ -3,7 +3,6 @@ package net.abdymazhit.skywars.events;
 import net.abdymazhit.skywars.Config;
 import net.abdymazhit.skywars.SkyWars;
 import net.abdymazhit.skywars.customs.Island;
-import net.abdymazhit.skywars.customs.PlayerKillEvent;
 import net.abdymazhit.skywars.enums.GameState;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

@@ -1,7 +1,6 @@
 package net.abdymazhit.skywars.events;
 
 import net.abdymazhit.skywars.SkyWars;
-import net.abdymazhit.skywars.customs.PlayerKillEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
