@@ -24,7 +24,7 @@ public class Kit {
     /** Id */
     public final int id;
 
-    /** Материал для показа */
+    /** Материал для показа в меню */
     private final Material material;
 
     /** Название */
@@ -94,5 +94,14 @@ public class Kit {
     static {
         idToKit = new HashMap<>();
         kitToId = new HashMap<>();
+        registerKit(1, Warrior.class);
+        registerKit(2, Archer.class);
+        registerKit(3, Assassin.class);
+        registerKit(4, Snowman.class);
+        registerKit(5, Battleship.class);
+        registerKit(6, Archaeologist.class);
+        registerKit(7, Descent.class);
+        registerKit(8, Witch.class);
+        registerKit(9, Magician.class);
     }
 }
