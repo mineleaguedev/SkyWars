@@ -43,8 +43,10 @@ public class BlockBreakListener implements Listener {
 
             ItemStack itemStack = SkyWars.getOresManager().getRandomItem(material);
             if(itemStack != null) {
-                Location location = event.getBlock().getLocation().add(0.5, 0.5, 0.5);
-                location.getWorld().dropItem(location, itemStack);
+                if(!itemStack.getType().equals(Material.AIR)) {
+                    Location location = event.getBlock().getLocation().add(0.5, 0.5, 0.5);
+                    location.getWorld().dropItem(location, itemStack);
+                }
                 event.setCancelled(true);
                 event.getBlock().setType(Material.AIR);
                 return;
