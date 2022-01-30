@@ -1,4 +1,4 @@
-package net.abdymazhit.skywars.items.menu;
+package net.abdymazhit.skywars.menu;
 
 import net.abdymazhit.skywars.SkyWars;
 import net.abdymazhit.skywars.kits.Kit;
@@ -8,18 +8,25 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Меню наборов
  */
 public class KitsMenu extends Menu {
 
+    /** Таблица слотов и наборов */
+    private final Map<Integer, Kit> slotsKitsMap;
+
     /**
      * Инициализирует меню наборов
      */
     public KitsMenu(Player player) {
         setInventory(Bukkit.createInventory(null, 45, "Выбор набора"));
+
+        slotsKitsMap = new HashMap<>();
 
         // Добавить слоты, которые доступны для наборов
         List<Integer> slots = new ArrayList<>();
@@ -36,20 +43,29 @@ public class KitsMenu extends Menu {
         // Установить предметы наборов для выбора
         int index = 0;
         for(int id = 1; id < Kit.idToKit.size() + 1; id++) {
-            try {
-                Class<? extends Kit> clazz = Kit.idToKit.get(id);
-                if(clazz == null) {
-                    return;
-                }
+            Kit kit = Kit.idToKit.get(id);
 
-                Kit kit = clazz.newInstance();
+            int slot = slots.get(index);
+            index++;
 
-                int slot = slots.get(index);
-                index++;
+            slotsKitsMap.put(slot, kit);
+            getInventory().setItem(slot, getKitItem(player, slotsKitsMap.get(slot)));
+        }
+    }
 
-                getInventory().setItem(slot, getKitItem(player, kit));
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
+    /**
+     * Обрабатывает событие клика по слоту меню
+     * @param player Игрок
+     * @param slot Слот
+     */
+    @Override
+    public void clickSlot(Player player, int slot) {
+        super.clickSlot(player, slot);
+        for(int s : slotsKitsMap.keySet()) {
+            if(slot == s) {
+                Kit kit = slotsKitsMap.get(s);
+                SkyWars.getGameManager().getPlayerInfo(player).setKit(kit);
+                getInventory().setItem(s, getKitItem(player, kit));
             }
         }
     }
@@ -62,7 +78,7 @@ public class KitsMenu extends Menu {
     public ItemStack getKitItem(Player player, Kit kit) {
         ItemStack itemStack = new ItemStack(kit.getMaterial());
         ItemMeta itemMeta = itemStack.getItemMeta();
-        List<String> lore = kit.getDescription();
+        List<String> lore = new ArrayList<>(kit.getDescription());
         lore.add("");
         if(SkyWars.getGameManager().getPlayerInfo(player).getKit() == kit) {
             lore.add("§aВЫБРАНО");

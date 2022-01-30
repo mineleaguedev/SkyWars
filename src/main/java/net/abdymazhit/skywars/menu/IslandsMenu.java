@@ -1,4 +1,4 @@
-package net.abdymazhit.skywars.items.menu;
+package net.abdymazhit.skywars.menu;
 
 import net.abdymazhit.skywars.Config;
 import net.abdymazhit.skywars.customs.Island;
@@ -117,6 +117,8 @@ public class IslandsMenu extends Menu {
             islandsIdSlot.put(19, 25);
             islandsIdSlot.put(20, 26);
         }
+
+        update();
     }
 
     /**

@@ -1,4 +1,4 @@
-package net.abdymazhit.skywars.items.menu;
+package net.abdymazhit.skywars.menu;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

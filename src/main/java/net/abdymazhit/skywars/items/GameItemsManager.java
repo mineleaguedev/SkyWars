@@ -2,7 +2,7 @@ package net.abdymazhit.skywars.items;
 
 import net.abdymazhit.skywars.Config;
 import net.abdymazhit.skywars.SkyWars;
-import net.abdymazhit.skywars.items.menu.*;
+import net.abdymazhit.skywars.menu.*;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -32,18 +32,6 @@ public class GameItemsManager {
     /** Хранит информацию о меню предмета */
     private final Map<ItemStack, Menu> itemMenu;
 
-    /** Меню телепортации к игрокам */
-    private final TeleportMenu teleportMenu;
-
-    /** Меню островов */
-    private final IslandsMenu islandsMenu;
-
-    /** Меню настроек зрителя для каждого зрителя */
-    private final Map<Player, SpectatorSettingsMenu> spectatorSettingsMenus;
-
-    /** Меню наборов для каждого игрока */
-    private final Map<Player, KitsMenu> playerKitsMenus;
-
     /**
      * Инициализирует игровые предметы
      */
@@ -52,9 +40,6 @@ public class GameItemsManager {
         spectatorItems = new HashMap<>();
         itemUsage = new HashMap<>();
         itemMenu = new HashMap<>();
-        islandsMenu = new IslandsMenu();
-        spectatorSettingsMenus = new HashMap<>();
-        playerKitsMenus = new HashMap<>();
 
         ItemStack teleportItem = new ItemStack(Material.SKULL_ITEM, 1, (byte) 3);
         ItemMeta teleportItemMeta = teleportItem.getItemMeta();
@@ -65,7 +50,7 @@ public class GameItemsManager {
         teleportItemMeta.setLore(teleportItemLore);
         teleportItem.setItemMeta(teleportItemMeta);
         spectatorItems.put(teleportItem, 0);
-        itemMenu.put(teleportItem, teleportMenu = new TeleportMenu());
+        itemMenu.put(teleportItem, SkyWars.getMenuManager().getTeleportMenu());
         itemUsage.put(teleportItem, player -> itemMenu.get(teleportItem).open(player));
 
         ItemStack spectatorSettingsItem = new ItemStack(Material.DIODE);
@@ -77,10 +62,10 @@ public class GameItemsManager {
         spectatorSettingsItemMeta.setLore(spectatorSettingsItemLore);
         spectatorSettingsItem.setItemMeta(spectatorSettingsItemMeta);
         spectatorItems.put(spectatorSettingsItem, 1);
-        itemUsage.put(spectatorSettingsItem, player -> spectatorSettingsMenus.get(player).open(player));
+        itemUsage.put(spectatorSettingsItem, player -> SkyWars.getMenuManager().getSpectatorSettingsMenu(player).open(player));
 
         // Проверка, зарегистрированы ли слоты в меню выбора острова для текущего формата игры
-        if (islandsMenu.getIslandsIdSlot().size() != Config.islands.size()) {
+        if (SkyWars.getMenuManager().getIslandsMenu().getIslandsIdSlot().size() != Config.islands.size()) {
             SkyWars.getInstance().getLogger().warning("Возможность выбора острова отключена!");
             SkyWars.getInstance().getLogger().warning("Для формата игры " + Config.islandPlayers + "x" + Config.islands.size() + " не зарегистрированы слоты для меню выбора острова!");
         }
@@ -95,10 +80,8 @@ public class GameItemsManager {
             islandsItemMeta.setLore(islandsItemLore);
             islandsItem.setItemMeta(islandsItemMeta);
             lobbyItems.put(islandsItem, 0);
-            itemMenu.put(islandsItem, islandsMenu);
+            itemMenu.put(islandsItem, SkyWars.getMenuManager().getIslandsMenu());
             itemUsage.put(islandsItem, player -> itemMenu.get(islandsItem).open(player));
-
-            islandsMenu.update();
         }
 
         ItemStack kitsItem = new ItemStack(Material.BOW);
@@ -110,17 +93,7 @@ public class GameItemsManager {
         kitsItemMeta.setLore(kitsItemLore);
         kitsItem.setItemMeta(kitsItemMeta);
         lobbyItems.put(kitsItem, 2);
-        itemUsage.put(kitsItem, player -> playerKitsMenus.get(player).open(player));
-
-        ItemStack cosmeticsItem = new ItemStack(Material.SLIME_BALL);
-        ItemMeta cosmeticsItemMeta = cosmeticsItem.getItemMeta();
-        cosmeticsItemMeta.setDisplayName("§r>> §e§lКосметика §r<<");
-        List<String> cosmeticsItemLore = new ArrayList<>();
-        cosmeticsItemLore.add("§7Нажмите ПКМ, чтобы открыть");
-        cosmeticsItemLore.add("§7меню косметики");
-        cosmeticsItemMeta.setLore(cosmeticsItemLore);
-        cosmeticsItem.setItemMeta(cosmeticsItemMeta);
-        lobbyItems.put(cosmeticsItem, 3);
+        itemUsage.put(kitsItem, player -> SkyWars.getMenuManager().getPlayerKitsMenu(player).open(player));
 
         ItemStack meItem = new ItemStack(Material.NETHER_STAR);
         ItemMeta meItemMeta = meItem.getItemMeta();
@@ -160,10 +133,7 @@ public class GameItemsManager {
             player.getInventory().setItem(slot, itemStack);
         }
 
-        ItemStack meItem = player.getInventory().getItem(7);
-        ItemMeta meItemMeta = meItem.getItemMeta();
-        meItemMeta.setDisplayName("§r>> §e§l" + player.getName() + " §r<<");
-        meItem.setItemMeta(meItemMeta);
+        giveMeItem(player);
     }
 
     /**
@@ -187,28 +157,20 @@ public class GameItemsManager {
                     player.getInventory().setItem(slot, itemStack);
                 }
 
-                ItemStack meItem = player.getInventory().getItem(7);
-                ItemMeta meItemMeta = meItem.getItemMeta();
-                meItemMeta.setDisplayName("§r>> §e§l" + player.getName() + " §r<<");
-                meItem.setItemMeta(meItemMeta);
+                giveMeItem(player);
             }
         }.runTaskLater(SkyWars.getInstance(), 1L);
     }
 
     /**
-     * Добавляет зрителю меню настроек зрителя
-     * @param player Зритель
-     */
-    public void addSpectatorSettingsMenu(Player player) {
-        spectatorSettingsMenus.put(player, new SpectatorSettingsMenu());
-    }
-
-    /**
-     * Добавляет игроку меню наборов
+     * Выдает игроку предмет профиля
      * @param player Игрок
      */
-    public void addPlayerKitsMenu(Player player) {
-        playerKitsMenus.put(player, new KitsMenu(player));
+    private void giveMeItem(Player player) {
+        ItemStack meItem = player.getInventory().getItem(7);
+        ItemMeta meItemMeta = meItem.getItemMeta();
+        meItemMeta.setDisplayName("§r>> §e§l" + player.getName() + " §r<<");
+        meItem.setItemMeta(meItemMeta);
     }
 
     /**
@@ -228,39 +190,27 @@ public class GameItemsManager {
      * @param inventory Инвентарь
      */
     public void clickInventory(Player player, Inventory inventory, int slot) {
-        // Значение, найдено ли меню
-        boolean isFoundMenu = false;
-
-        for (ItemStack itemStack : itemMenu.keySet()) {
+        for(ItemStack itemStack : itemMenu.keySet()) {
             Menu menu = itemMenu.get(itemStack);
             if (menu.getInventory().equals(inventory)) {
-                isFoundMenu = true;
                 menu.clickSlot(player, slot);
+                return;
             }
         }
 
-        // Если меню не найдено, тогда меню является уникальным
-        // Уникальное меню для каждого игрока - настройки зрителя
-        if (!isFoundMenu) {
-            if (spectatorSettingsMenus.get(player) != null) {
-                spectatorSettingsMenus.get(player).clickSlot(player, slot);
+        KitsMenu kitsMenu = SkyWars.getMenuManager().getPlayerKitsMenu(player);
+        if(kitsMenu != null) {
+            if(kitsMenu.getInventory().equals(inventory)) {
+                kitsMenu.clickSlot(player, slot);
+                return;
             }
         }
-    }
 
-    /**
-     * Получает меню телепортации к игрокам
-     * @return Меню телепортации к игрокам
-     */
-    public TeleportMenu getTeleportMenu() {
-        return teleportMenu;
-    }
-
-    /**
-     * Получает меню островов
-     * @return Меню островов
-     */
-    public IslandsMenu getIslandsMenu() {
-        return islandsMenu;
+        SpectatorSettingsMenu spectatorSettingsMenu = SkyWars.getMenuManager().getSpectatorSettingsMenu(player);
+        if(spectatorSettingsMenu != null) {
+            if(spectatorSettingsMenu.getInventory().equals(inventory)) {
+                spectatorSettingsMenu.clickSlot(player, slot);
+            }
+        }
     }
 }
