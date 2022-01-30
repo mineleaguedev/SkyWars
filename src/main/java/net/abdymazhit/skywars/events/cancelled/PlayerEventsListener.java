@@ -24,13 +24,7 @@ public class PlayerEventsListener implements Listener {
      */
     @EventHandler
     public void onPlayerArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
-        if(SkyWars.getGameManager().getGameState().equals(GameState.WAITING) || SkyWars.getGameManager().getGameState().equals(GameState.STARTING)) {
-            event.setCancelled(true);
-        }
-
-        if(SkyWars.getGameManager().getSpectators().contains(event.getPlayer())) {
-            event.setCancelled(true);
-        }
+        event.setCancelled(true);
     }
 
     /**
