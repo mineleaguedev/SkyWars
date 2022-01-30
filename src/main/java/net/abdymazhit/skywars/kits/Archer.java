@@ -30,9 +30,10 @@ public class Archer extends Kit {
 
     /**
      * Инициализирует набор
+     * @param id Id
      */
-    public Archer() {
-        super(material, name, description, items);
+    public Archer(int id) {
+        super(id, material, name, description, items);
     }
 
     static {

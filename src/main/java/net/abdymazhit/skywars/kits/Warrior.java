@@ -30,9 +30,10 @@ public class Warrior extends Kit {
 
     /**
      * Инициализирует набор
+     * @param id Id
      */
-    public Warrior() {
-        super(material, name, description, items);
+    public Warrior(int id) {
+        super(id, material, name, description, items);
     }
 
     static {

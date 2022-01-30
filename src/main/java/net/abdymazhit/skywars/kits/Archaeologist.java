@@ -29,9 +29,10 @@ public class Archaeologist extends Kit {
 
     /**
      * Инициализирует набор
+     * @param id Id
      */
-    public Archaeologist() {
-        super(material, name, description, items);
+    public Archaeologist(int id) {
+        super(id, material, name, description, items);
     }
 
     static {

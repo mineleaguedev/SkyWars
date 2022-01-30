@@ -4,9 +4,8 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.Potion;
+import org.bukkit.potion.PotionType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,9 +32,10 @@ public class Assassin extends Kit {
 
     /**
      * Инициализирует набор
+     * @param id Id
      */
-    public Assassin() {
-        super(material, name, description, items);
+    public Assassin(int id) {
+        super(id, material, name, description, items);
     }
 
     static {
@@ -44,15 +44,11 @@ public class Assassin extends Kit {
         itemMeta1.addEnchant(Enchantment.DAMAGE_ALL, 1, true);
         item1.setItemMeta(itemMeta1);
 
-        ItemStack item2 = new ItemStack(Material.POTION);
-        PotionMeta itemMeta2 = (PotionMeta) item2.getItemMeta();
-        itemMeta2.addCustomEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 30, 0), true);
-        item2.setItemMeta(itemMeta2);
+        Potion potion2 = new Potion(PotionType.INVISIBILITY, 1);
+        ItemStack item2 = potion2.toItemStack(1);
 
-        ItemStack item3 = new ItemStack(Material.POTION);
-        PotionMeta itemMeta3 = (PotionMeta) item3.getItemMeta();
-        itemMeta3.addCustomEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 30, 0), true);
-        item3.setItemMeta(itemMeta3);
+        Potion potion3 = new Potion(PotionType.INVISIBILITY, 1);
+        ItemStack item3 = potion3.toItemStack(1);
 
         items = new ItemStack[] {
                 item1,

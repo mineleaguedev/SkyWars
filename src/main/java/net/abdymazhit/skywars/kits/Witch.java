@@ -14,7 +14,7 @@ import java.util.List;
 public class Witch extends Kit {
 
     /** Материал для показа в меню */
-    private static final Material material = Material.NETHER_WARTS;
+    private static final Material material = Material.NETHER_STAR;
 
     /** Название */
     private static final String name = "Ведьма";
@@ -31,9 +31,10 @@ public class Witch extends Kit {
 
     /**
      * Инициализирует набор
+     * @param id Id
      */
-    public Witch() {
-        super(material, name, description, items);
+    public Witch(int id) {
+        super(id, material, name, description, items);
     }
 
     static {

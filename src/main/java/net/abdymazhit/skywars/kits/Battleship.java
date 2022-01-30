@@ -30,9 +30,10 @@ public class Battleship extends Kit {
 
     /**
      * Инициализирует набор
+     * @param id Id
      */
-    public Battleship() {
-        super(material, name, description, items);
+    public Battleship(int id) {
+        super(id, material, name, description, items);
     }
 
     static {

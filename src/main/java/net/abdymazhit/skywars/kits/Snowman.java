@@ -31,9 +31,10 @@ public class Snowman extends Kit {
 
     /**
      * Инициализирует набор
+     * @param id Id
      */
-    public Snowman() {
-        super(material, name, description, items);
+    public Snowman(int id) {
+        super(id, material, name, description, items);
     }
 
     static {

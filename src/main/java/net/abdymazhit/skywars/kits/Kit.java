@@ -15,11 +15,11 @@ import java.util.Map;
  */
 public class Kit {
 
-    /** Таблица id набора и класса набора */
-    public static final Map<Integer, Class<? extends Kit>> idToKit;
+    /** Таблица id набора и набора */
+    public static Map<Integer, Kit> idToKit;
 
-    /** Таблица класса набора и id набора */
-    public static final Map<Class<? extends Kit>, Integer> kitToId;
+    /** Таблица набора и id набора */
+    public static Map<Kit, Integer> kitToId;
 
     /** Id */
     public final int id;
@@ -37,24 +37,33 @@ public class Kit {
     private final ItemStack[] items;
 
     /**
-     * Регистрирует набор
-     * @param id Id набора
-     * @param clazz Класс набора
+     * Регистрирует все наборы
      */
-    private static void registerKit(int id, Class<? extends Kit> clazz) {
-        Kit.idToKit.put(id, clazz);
-        Kit.kitToId.put(clazz, id);
+    public static void registerKits() {
+        idToKit = new HashMap<>();
+        kitToId = new HashMap<>();
+        new Warrior(1);
+        new Archer(2);
+        new Assassin(3);
+        new Snowman(4);
+        new Battleship(5);
+        new Archaeologist(6);
+        new Descent(7);
+        new Witch(8);
+        new Magician(9);
     }
 
     /**
      * Инициализирует набор
      */
-    public Kit(Material material, String name, List<String> description, ItemStack[] items) {
-        id = Kit.kitToId.get(getClass());
+    public Kit(int id, Material material, String name, List<String> description, ItemStack[] items) {
+        this.id = id;
         this.material = material;
         this.name = name;
         this.description = description;
         this.items = items;
+        idToKit.put(id, this);
+        kitToId.put(this, id);
     }
 
     /**
@@ -89,19 +98,5 @@ public class Kit {
      */
     public List<String> getDescription() {
         return description;
-    }
-
-    static {
-        idToKit = new HashMap<>();
-        kitToId = new HashMap<>();
-        registerKit(1, Warrior.class);
-        registerKit(2, Archer.class);
-        registerKit(3, Assassin.class);
-        registerKit(4, Snowman.class);
-        registerKit(5, Battleship.class);
-        registerKit(6, Archaeologist.class);
-        registerKit(7, Descent.class);
-        registerKit(8, Witch.class);
-        registerKit(9, Magician.class);
     }
 }

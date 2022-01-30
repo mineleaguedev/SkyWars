@@ -33,9 +33,10 @@ public class Descent extends Kit {
 
     /**
      * Инициализирует набор
+     * @param id Id
      */
-    public Descent() {
-        super(material, name, description, items);
+    public Descent(int id) {
+        super(id, material, name, description, items);
     }
 
     static {

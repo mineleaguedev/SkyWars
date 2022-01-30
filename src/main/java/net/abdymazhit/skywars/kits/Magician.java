@@ -29,9 +29,10 @@ public class Magician extends Kit {
 
     /**
      * Инициализирует набор
+     * @param id Id
      */
-    public Magician() {
-        super(material, name, description, items);
+    public Magician(int id) {
+        super(id, material, name, description, items);
     }
 
     static {
