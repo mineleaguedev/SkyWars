@@ -12,6 +12,8 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 
+import java.util.List;
+
 /**
  * Событие ломания блока игроком
  */
@@ -52,6 +54,19 @@ public class BlockBreakListener implements Listener {
                 return;
             }
 
+            List<ItemStack> itemStacks = SkyWars.getOresManager().getRandomItems(material);
+            if(itemStacks != null && !itemStacks.isEmpty()) {
+                for(ItemStack item : itemStacks) {
+                    if(item != null && !item.getType().equals(Material.AIR)) {
+                        Location location = event.getBlock().getLocation().add(0.5, 0.5, 0.5);
+                        location.getWorld().dropItem(location, item);
+                    }
+                }
+                event.setCancelled(true);
+                event.getBlock().setType(Material.AIR);
+                return;
+            }
+
             int level = SkyWars.getOresManager().getRandomLevel(material);
             if(level != 0) {
                 player.giveExpLevels(level);
@@ -60,9 +75,16 @@ public class BlockBreakListener implements Listener {
                 return;
             }
 
-            PotionEffect potionEffect = SkyWars.getOresManager().getRandomPotionEffect(material);
+            PotionEffect potionEffect = SkyWars.getOresManager().getRandomPotionEffect(material, player.getActivePotionEffects());
             if(potionEffect != null) {
-                if(player.getActivePotionEffects().size() < 2) {
+                if(player.getActivePotionEffects().isEmpty()) {
+                    player.addPotionEffect(potionEffect);
+                    SkyWars.getGameManager().getPlayerInfo(player).setNextRemovablePotionEffectType(potionEffect.getType());
+                } else {
+                    if(player.getActivePotionEffects().size() != 1) {
+                        player.removePotionEffect(SkyWars.getGameManager().getPlayerInfo(player).getNextRemovablePotionEffectType());
+                        SkyWars.getGameManager().getPlayerInfo(player).setNextRemovablePotionEffectType(player.getActivePotionEffects().iterator().next().getType());
+                    }
                     player.addPotionEffect(potionEffect);
                 }
                 event.setCancelled(true);

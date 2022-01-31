@@ -123,14 +123,26 @@ public class OresManager {
 
         itemsMap.put(Material.REDSTONE_ORE, Collections.singletonList(
                 new OreLoot[] {
-                        new OreLoot(PotionEffectType.NIGHT_VISION.createEffect(90, 0), 3),
-                        new OreLoot(PotionEffectType.JUMP.createEffect(60, 0), 2),
-                        new OreLoot(PotionEffectType.SPEED.createEffect(60, 0), 2),
-                        new OreLoot(PotionEffectType.FIRE_RESISTANCE.createEffect(60, 0), 2),
-                        new OreLoot(PotionEffectType.WATER_BREATHING.createEffect(60, 0), 2),
-                        new OreLoot(PotionEffectType.INCREASE_DAMAGE.createEffect(30, 0), 1),
-                        new OreLoot(PotionEffectType.INVISIBILITY.createEffect(30, 0), 1),
-                        new OreLoot(PotionEffectType.REGENERATION.createEffect(30, 0), 1),
+                        new OreLoot(PotionEffectType.NIGHT_VISION.createEffect(1800, 0), 3),
+                        new OreLoot(PotionEffectType.JUMP.createEffect(1200, 0), 2),
+                        new OreLoot(PotionEffectType.SPEED.createEffect(1200, 0), 2),
+                        new OreLoot(PotionEffectType.FIRE_RESISTANCE.createEffect(1200, 0), 2),
+                        new OreLoot(PotionEffectType.WATER_BREATHING.createEffect(1200, 0), 2),
+                        new OreLoot(PotionEffectType.INCREASE_DAMAGE.createEffect(600, 0), 1),
+                        new OreLoot(PotionEffectType.INVISIBILITY.createEffect(600, 0), 1),
+                        new OreLoot(PotionEffectType.REGENERATION.createEffect(600, 0), 1),
+                }));
+
+        itemsMap.put(Material.GLOWING_REDSTONE_ORE, Collections.singletonList(
+                new OreLoot[] {
+                        new OreLoot(PotionEffectType.NIGHT_VISION.createEffect(1800, 0), 3),
+                        new OreLoot(PotionEffectType.JUMP.createEffect(1200, 0), 2),
+                        new OreLoot(PotionEffectType.SPEED.createEffect(1200, 0), 2),
+                        new OreLoot(PotionEffectType.FIRE_RESISTANCE.createEffect(1200, 0), 2),
+                        new OreLoot(PotionEffectType.WATER_BREATHING.createEffect(1200, 0), 2),
+                        new OreLoot(PotionEffectType.INCREASE_DAMAGE.createEffect(600, 0), 1),
+                        new OreLoot(PotionEffectType.INVISIBILITY.createEffect(600, 0), 1),
+                        new OreLoot(PotionEffectType.REGENERATION.createEffect(600, 0), 1),
                 }));
     }
 
@@ -142,6 +154,10 @@ public class OresManager {
     public ItemStack getRandomItem(Material material) {
         List<OreLoot[]> items = itemsMap.get(material);
         if(items == null) {
+            return null;
+        }
+
+        if(material.equals(Material.IRON_ORE) || material.equals(Material.DIAMOND_ORE)) {
             return null;
         }
 
@@ -160,6 +176,39 @@ public class OresManager {
             }
         }
         return oreLoots[index].getItemStack();
+    }
+
+    /**
+     * Получает случайные предметы с руды
+     * @param material Материал руды
+     * @return Случайные предметы с руды
+     */
+    public List<ItemStack> getRandomItems(Material material) {
+        List<OreLoot[]> items = itemsMap.get(material);
+        if(items == null) {
+            return null;
+        }
+
+        List<ItemStack> itemStacks = new ArrayList<>();
+        for(OreLoot[] oreLoots : items) {
+            int totalWeight = 0;
+            for(OreLoot oreLoot : oreLoots) {
+                totalWeight += oreLoot.getWeight();
+            }
+
+            int index = 0;
+            for(double r = Math.random() * totalWeight; index < oreLoots.length - 1; index++) {
+                r -= oreLoots[index].getWeight();
+                if(r <= 0.0) {
+                    break;
+                }
+            }
+            ItemStack itemStack = oreLoots[index].getItemStack();
+            if(itemStack != null) {
+                itemStacks.add(itemStack);
+            }
+        }
+        return itemStacks;
     }
 
     /**
@@ -193,28 +242,47 @@ public class OresManager {
     /**
      * Получает случайный эффект зелья с руды
      * @param material Материал руды
+     * @param activePotionEffects Текущие эффекты зелья игрока
      * @return Случайный эффект зелья
      */
-    public PotionEffect getRandomPotionEffect(Material material) {
+    public PotionEffect getRandomPotionEffect(Material material, Collection<PotionEffect> activePotionEffects) {
         List<OreLoot[]> potionEffects = itemsMap.get(material);
         if(potionEffects == null) {
             return null;
         }
 
-        OreLoot[] oreLoots = potionEffects.get(Random.random.nextInt(potionEffects.size()));
+        while(true) {
+            OreLoot[] oreLoots = potionEffects.get(Random.random.nextInt(potionEffects.size()));
 
-        int totalWeight = 0;
-        for(OreLoot oreLoot : oreLoots) {
-            totalWeight += oreLoot.getWeight();
-        }
+            int totalWeight = 0;
+            for(OreLoot oreLoot : oreLoots) {
+                totalWeight += oreLoot.getWeight();
+            }
 
-        int index = 0;
-        for(double r = Math.random() * totalWeight; index < oreLoots.length - 1; index++) {
-            r -= oreLoots[index].getWeight();
-            if(r <= 0.0) {
-                break;
+            int index = 0;
+            for(double r = Math.random() * totalWeight; index < oreLoots.length - 1; index++) {
+                r -= oreLoots[index].getWeight();
+                if(r <= 0.0) {
+                    break;
+                }
+            }
+
+            PotionEffect potionEffect = oreLoots[index].getPotionEffect();
+            System.out.println(potionEffect);
+
+            Iterator<PotionEffect> iterator = activePotionEffects.iterator();
+
+            boolean hasPotion = false;
+            while(iterator.hasNext()) {
+                PotionEffect potionEff = iterator.next();
+                if(potionEff.getType().equals(potionEffect.getType())) {
+                    hasPotion = true;
+                }
+            }
+
+            if(!hasPotion) {
+                return oreLoots[index].getPotionEffect();
             }
         }
-        return oreLoots[index].getPotionEffect();
     }
 }

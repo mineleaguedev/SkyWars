@@ -3,6 +3,7 @@ package net.abdymazhit.skywars.customs;
 import net.abdymazhit.skywars.kits.Kit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffectType;
 
 /**
  * Информацию о игроке
@@ -33,19 +34,20 @@ public class PlayerInfo {
     /** Местоположение смерти игрока */
     private Location deathLocation;
 
+    /** Следующий удаляемый тип эффекта зелья игрока */
+    private PotionEffectType nextRemovablePotionEffectType;
+
     /**
      * Создает информацию о игроке
      * @param stats Статистика
      */
     public PlayerInfo(Stats stats) {
         this.stats = stats;
-        this.kit = null;
+        this.kit = Kit.idToKit.get(1);
         this.kills = 0;
         this.arrowsFired = 0;
         this.blocksBroken = 0;
         this.blocksPlaced = 0;
-        this.lastDamager = null;
-        this.deathLocation = null;
     }
 
     /**
@@ -162,5 +164,21 @@ public class PlayerInfo {
      */
     public Location getDeathLocation() {
         return deathLocation;
+    }
+
+    /**
+     * Устанавливает следующий удаляемый тип эффекта зелья игрока
+     * @param nextRemovablePotionEffectType Следующий удаляемый тип эффекта зелья игрока
+     */
+    public void setNextRemovablePotionEffectType(PotionEffectType nextRemovablePotionEffectType) {
+        this.nextRemovablePotionEffectType = nextRemovablePotionEffectType;
+    }
+
+    /**
+     * Получает следующий удаляемый тип эффекта зелья игрока
+     * @return Следующий удаляемый тип эффекта зелья игрока
+     */
+    public PotionEffectType getNextRemovablePotionEffectType() {
+        return nextRemovablePotionEffectType;
     }
 }
