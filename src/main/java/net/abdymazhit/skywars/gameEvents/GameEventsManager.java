@@ -154,7 +154,7 @@ public class GameEventsManager {
         }
 
         // Обновить меню телепортации к игрокам
-        SkyWars.getGameItemsManager().getTeleportMenu().update();
+        SkyWars.getMenuManager().getTeleportMenu().update();
 
         // Обновить scoreboard игры
         SkyWars.getGameManager().getGameBoard().updateLivePlayersCount();

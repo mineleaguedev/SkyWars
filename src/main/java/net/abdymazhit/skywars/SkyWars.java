@@ -5,6 +5,8 @@ import net.abdymazhit.skywars.events.*;
 import net.abdymazhit.skywars.events.cancelled.*;
 import net.abdymazhit.skywars.gameEvents.GameEventsManager;
 import net.abdymazhit.skywars.items.GameItemsManager;
+import net.abdymazhit.skywars.kits.Kit;
+import net.abdymazhit.skywars.menu.MenuManager;
 import net.abdymazhit.skywars.ores.OresManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -24,6 +26,9 @@ public class SkyWars extends JavaPlugin {
 
     /** Менеджер игровых событий */
     private static GameEventsManager gameEventsManager;
+
+    /** Менеджер меню */
+    private static MenuManager menuManager;
 
     /** Менеджер игровых предметов */
     private static GameItemsManager gameItemsManager;
@@ -49,9 +54,16 @@ public class SkyWars extends JavaPlugin {
         gameManager = new GameManager();
         ratingManager = new RatingManager();
         gameEventsManager = new GameEventsManager();
+        menuManager = new MenuManager();
         gameItemsManager = new GameItemsManager();
         chestManager = new ChestManager();
         oresManager = new OresManager();
+
+        // Отменить сохранение мира
+        Config.world.setAutoSave(false);
+
+        // Зарегистрировать все наборы
+        Kit.registerKits();
 
         // Регистрирует отмененные события
         getServer().getPluginManager().registerEvents(new BlockEventsListener(), SkyWars.getInstance());
@@ -73,6 +85,7 @@ public class SkyWars extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new InventoryOpenListener(), SkyWars.getInstance());
         getServer().getPluginManager().registerEvents(new PlayerDeathListener(), SkyWars.getInstance());
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(), SkyWars.getInstance());
+        getServer().getPluginManager().registerEvents(new PlayerKillListener(), SkyWars.getInstance());
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(), SkyWars.getInstance());
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(), SkyWars.getInstance());
     }
@@ -115,6 +128,14 @@ public class SkyWars extends JavaPlugin {
      */
     public static GameEventsManager getGameEventsManager() {
         return gameEventsManager;
+    }
+
+    /**
+     * Получает менеджер меню
+     * @return Менеджер меню
+     */
+    public static MenuManager getMenuManager() {
+        return menuManager;
     }
 
     /**
